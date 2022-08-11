@@ -5,16 +5,16 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
+import type { Currency, PairWithCommission, InlinePairWithRate } from '~/types/exchange.types'
+import type { OnBeforeDestroy, OnMounted, WithFetch } from '~/types/vue.types'
 import ExchangeBase from '~/components/exchange/exchange-base.vue'
-import { Currency, CurrencyPair, ExchangeRate } from '~/types/exchange.types'
-import { OnBeforeDestroy, OnMounted, WithFetch } from '~/types/vue.types'
 
 @Component({
   components: { ExchangeBase },
 })
 export default class IndexPage extends Vue implements OnBeforeDestroy, OnMounted, WithFetch {
-  private pairs: CurrencyPair[] = []
-  private rates: ExchangeRate[] = []
+  private pairs: PairWithCommission[] = []
+  private rates: InlinePairWithRate[] = []
   private currencies: Currency[] = []
 
   private updateRatesInterval!: ReturnType<typeof setTimeout>

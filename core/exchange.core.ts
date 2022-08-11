@@ -1,4 +1,4 @@
-import { Currency, CurrencyPair, ExchangeRate } from '~/types/exchange.types'
+import { Currency, PairWithCommission, InlinePairWithRate } from '~/types/exchange.types'
 
 export enum ExchangeDir {
   BASE,
@@ -33,7 +33,7 @@ export const getRateWithCommission = (rate: number, commission: number) => {
   return rate - rate * commission
 }
 
-export const findRateByPair = (list: ExchangeRate[], base: Currency, quote: Currency): number => {
+export const findRateByPair = (list: InlinePairWithRate[], base: Currency, quote: Currency): number => {
   const currencyRate = list.find(rate => rate.currencyPair === `${base}/${quote}`)
   if (currencyRate) {
     return currencyRate.rate
@@ -42,7 +42,7 @@ export const findRateByPair = (list: ExchangeRate[], base: Currency, quote: Curr
   }
 }
 
-export const findCommissionByPair = (list: CurrencyPair[], base: Currency, quote: Currency): number => {
+export const findCommissionByPair = (list: PairWithCommission[], base: Currency, quote: Currency): number => {
   const currencyRate = list.find(pair => pair.baseCurrency === base && pair.quoteCurrency === quote)
   if (currencyRate) {
     return parseFloat(currencyRate.commission) / 100

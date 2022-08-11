@@ -6,10 +6,16 @@ export interface IServices {
   exchange: ExchangeService
 }
 
+// prevent memory leak on SSR
+// eslint-disable-next-line import/no-mutable-exports
+let services: IServices
+
 export default function ({ $axios }: Context, inject: Inject) {
-  const services = {
+  services = {
     exchange: new ExchangeService($axios),
   }
 
   inject('services', services)
 }
+
+export { services }

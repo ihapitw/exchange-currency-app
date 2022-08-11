@@ -22,24 +22,25 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
-import ExchangeInput from '~/components/exchange/exchange-input.vue'
-import { Currency, CurrencyPair, ExchangeRate } from '~/types/exchange.types'
+import type { Currency, PairWithCommission, InlinePairWithRate } from '~/types/exchange.types'
 import {
   ExchangeDir,
   applyRateToExchangeValue,
   getRateWithCommission,
-  findRateByPair, findCommissionByPair,
+  findRateByPair,
+  findCommissionByPair,
 } from '~/core/exchange.core'
+import ExchangeInput from '~/components/exchange/exchange-input.vue'
 
 @Component({
   components: { ExchangeInput },
 })
 export default class ExchangeBase extends Vue {
   @Prop({ required: true, type: Array })
-  readonly pairs!: CurrencyPair[]
+  readonly pairs!: PairWithCommission[]
 
   @Prop({ required: true, type: Array })
-  readonly rates!: ExchangeRate[]
+  readonly rates!: InlinePairWithRate[]
 
   @Prop({ required: true, type: Array })
   private currencies!: Currency[]
