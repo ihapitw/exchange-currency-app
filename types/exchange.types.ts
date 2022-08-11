@@ -11,3 +11,13 @@ export type InlinePairWithRate = {
   currencyPair: string,
   rate: number
 }
+
+export type CurrencyWithAmount = {
+  currency: Currency,
+  amount: number,
+}
+
+export type ExchangePayload = {
+  base: CurrencyWithAmount,
+  quote: CurrencyWithAmount,
+}

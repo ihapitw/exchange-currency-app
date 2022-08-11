@@ -1,7 +1,7 @@
 <template lang="pug">
   .exchange-input
-    el-input(:value="targetValue" @input="onInput")
-    el-select(v-model="currencyValue" placeholder="Валюта" )
+    el-input(:value="targetValue" @input="onInput" :disabled="disabled")
+    el-select(v-model="currencyValue" placeholder="Валюта" :disabled="disabled")
       el-option(
         v-for="option in currencies"
         :label="option"
@@ -28,6 +28,9 @@ export default class ExchangeInput extends Vue {
 
   @Prop({ required: true, type: String })
   readonly crossCurrency!: Currency
+
+  @Prop({ required: false, default: false, type: Boolean })
+  readonly disabled!: boolean
 
   onInput (value: string) {
     const [target] = value.match(/(\d+)(\.|,)?(\d+)?/) || []

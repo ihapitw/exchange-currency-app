@@ -17,12 +17,15 @@
       @update:currency="calculateQuoteCurrency"
     )
 
-    .exchange-base__meta Курс: 1 {{baseCurrency}} = {{rateWithCommission}} {{quoteCurrency}}
+    .exchange-base__footer
+      .exchange-base__meta
+        template(v-if="isExchangePossible") Курс: 1 {{baseCurrency}} = {{rateWithCommission}} {{quoteCurrency}}
+      el-button(type="primary" @click="onExchange" :disabled="!isExchangePossible") Обменять
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
-import type { Currency, PairWithCommission, InlinePairWithRate } from '~/types/exchange.types'
+import { Component, Emit, Prop, Vue, Watch } from 'nuxt-property-decorator'
+import type { Currency, PairWithCommission, InlinePairWithRate, ExchangePayload } from '~/types/exchange.types'
 import {
   ExchangeDir,
   applyRateToExchangeValue,
@@ -48,10 +51,26 @@ export default class ExchangeBase extends Vue {
   private baseValue = ''
   private quoteValue = ''
 
-  private baseCurrency: Currency = 'USD'
-  private quoteCurrency: Currency = 'EUR'
+  private baseCurrency: Currency = ''
+  private quoteCurrency: Currency = ''
+
+  get isCurrenciesSelected () {
+    return this.baseCurrency && this.quoteCurrency
+  }
+
+  get isHasValues () {
+    return this.baseValue && this.quoteValue
+  }
+
+  get isExchangePossible () {
+    return this.isCurrenciesSelected && this.isHasValues
+  }
 
   get rateWithCommission (): number {
+    if (!this.isCurrenciesSelected) {
+      return 1
+    }
+
     try {
       const commission = findCommissionByPair(this.pairs, this.baseCurrency, this.quoteCurrency)
       const rate = findRateByPair(this.rates, this.baseCurrency, this.quoteCurrency)
@@ -83,6 +102,20 @@ export default class ExchangeBase extends Vue {
   onRatesChange () {
     this.calculateQuoteCurrency()
   }
+
+  @Emit()
+  onExchange (): ExchangePayload {
+    return {
+      base: {
+        currency: this.baseCurrency,
+        amount: Number(this.baseValue),
+      },
+      quote: {
+        currency: this.quoteCurrency,
+        amount: Number(this.quoteValue),
+      },
+    }
+  }
 }
 </script>
 
@@ -96,6 +129,13 @@ export default class ExchangeBase extends Vue {
   padding: 1rem;
   border-radius: 4px;
   background-color: #fff;
+
+  &__footer {
+    display: grid;
+    align-items: center;
+    gap: 1rem;
+    grid-template-columns: 1fr 120px;
+  }
 
   &__meta {
     font-size: .75em;

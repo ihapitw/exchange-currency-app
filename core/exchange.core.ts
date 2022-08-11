@@ -12,7 +12,7 @@ export const applyRateToExchangeValue = (sourceValue: number | string, rate: num
   }
 
   if (typeof value === 'string') {
-    value = parseFloat(value)
+    value = Number(value)
 
     if (isNaN(value)) {
       throw new TypeError(`Incorrect value ${sourceValue}`)
