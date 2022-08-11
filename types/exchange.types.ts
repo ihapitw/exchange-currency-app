@@ -17,7 +17,7 @@ export type CurrencyWithAmount = {
   amount: number,
 }
 
-export type ExchangePayload = {
+export type ExchangeData = {
   base: CurrencyWithAmount,
   quote: CurrencyWithAmount,
 }

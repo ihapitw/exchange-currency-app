@@ -1,5 +1,5 @@
 <template lang="pug">
-  .exchange-base
+  exchange-layout.exchange-base
     exchange-input(
       :target.sync="baseValue"
       :currency.sync="baseCurrency"
@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from 'nuxt-property-decorator'
-import type { Currency, PairWithCommission, InlinePairWithRate, ExchangePayload } from '~/types/exchange.types'
+import type { Currency, PairWithCommission, InlinePairWithRate, ExchangeData } from '~/types/exchange.types'
 import {
   ExchangeDir,
   applyRateToExchangeValue,
@@ -34,9 +34,10 @@ import {
   findCommissionByPair,
 } from '~/core/exchange.core'
 import ExchangeInput from '~/components/exchange/exchange-input.vue'
+import ExchangeLayout from '~/components/exchange/exchange-layout.vue'
 
 @Component({
-  components: { ExchangeInput },
+  components: { ExchangeLayout, ExchangeInput },
 })
 export default class ExchangeBase extends Vue {
   @Prop({ required: true, type: Array })
@@ -104,7 +105,7 @@ export default class ExchangeBase extends Vue {
   }
 
   @Emit()
-  onExchange (): ExchangePayload {
+  onExchange (): ExchangeData {
     return {
       base: {
         currency: this.baseCurrency,
@@ -121,14 +122,8 @@ export default class ExchangeBase extends Vue {
 
 <style scoped lang="scss">
 .exchange-base {
-  width: 450px;
-  max-width: 100%;
   display: grid;
   gap: 1rem;
-  margin: auto;
-  padding: 1rem;
-  border-radius: 4px;
-  background-color: #fff;
 
   &__footer {
     display: grid;

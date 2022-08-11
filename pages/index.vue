@@ -1,21 +1,36 @@
 <template lang="pug">
   .exchange-page
-    exchange-base(:pairs="pairs" :rates="rates" :currencies="currencies" @on-exchange="onExchange")
+    transition(name="component-switch" mode="out-in")
+      exchange-success(
+        v-if="lastExchange"
+        :exchange-data="lastExchange"
+        @on-reset="lastExchange = null"
+      )
+      exchange-base(
+        v-else
+        :pairs="pairs"
+        :rates="rates"
+        :currencies="currencies"
+        @on-exchange="onExchange"
+      )
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import type { Currency, PairWithCommission, InlinePairWithRate, ExchangePayload } from '~/types/exchange.types'
+import type { Currency, PairWithCommission, InlinePairWithRate, ExchangeData } from '~/types/exchange.types'
 import type { OnBeforeDestroy, OnMounted, WithFetch } from '~/types/vue.types'
 import ExchangeBase from '~/components/exchange/exchange-base.vue'
+import ExchangeSuccess from '~/components/exchange/exchange-success.vue'
 
 @Component({
-  components: { ExchangeBase },
+  components: { ExchangeSuccess, ExchangeBase },
 })
 export default class IndexPage extends Vue implements OnBeforeDestroy, OnMounted, WithFetch {
   private pairs: PairWithCommission[] = []
   private rates: InlinePairWithRate[] = []
   private currencies: Currency[] = []
+
+  private lastExchange: ExchangeData | null = null
 
   private updateRatesInterval!: ReturnType<typeof setTimeout>
 
@@ -29,8 +44,8 @@ export default class IndexPage extends Vue implements OnBeforeDestroy, OnMounted
     this.rates = await this.$services.exchange.getRates()
   }
 
-  onExchange (payload: ExchangePayload) {
-    console.info(payload)
+  onExchange (payload: ExchangeData) {
+    this.lastExchange = payload
   }
 
   mounted () {
