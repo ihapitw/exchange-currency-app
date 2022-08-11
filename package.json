@@ -10,6 +10,7 @@
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js",
     "lintfix": "npm run lint:js -- --fix",
+    "pre-commit": "npm run build && npm run lint",
     "prepare": "husky install"
   },
   "dependencies": {
