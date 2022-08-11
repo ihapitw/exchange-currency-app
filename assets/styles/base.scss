@@ -1,0 +1,21 @@
+@import "variables";
+
+html {
+  font-family: var(--base-font-family);
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  min-height: 100vh;
+}
+
+body, #__nuxt, #__layout {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
